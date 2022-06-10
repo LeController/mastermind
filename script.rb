@@ -77,7 +77,11 @@ class Mastermind
           if validity[j] == 'correct'
             guesses.push(past_guesses[hash_index][-1])
           else
-            guesses.push(['black', 'white', 'red', 'green', 'yellow', 'blue'].sample)
+            guess = ['black', 'white', 'red', 'green', 'yellow', 'blue'].sample
+            while past_guesses[hash_index].include?(guess) do
+              guess = ['black', 'white', 'red', 'green', 'yellow', 'blue'].sample
+            end
+            guesses.push(guess)
           end
 
         end

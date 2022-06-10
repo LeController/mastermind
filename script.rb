@@ -5,7 +5,7 @@ class Mastermind
     for i in 0..3
       @board.push(['black', 'white', 'red', 'green', 'yellow', 'blue'].sample)
     end
-    p "COMPUTER BOARD: ",board
+    # p "COMPUTER BOARD: ",board
     # return @board
     puts "\nWould you like to be the Mastermind or the Guesser?"
     @player_role = gets.chomp.strip.downcase[0]
@@ -24,6 +24,10 @@ class Mastermind
     for i in 0..3
       puts "\nWhat is your color for position #{i+1}?"
       color = gets.chomp.strip.downcase
+      while !['black', 'white', 'red', 'green', 'yellow', 'blue'].include?(color) do
+        puts "\nINVALID COLOR FOR POSITION #{i+1}. PLEASE INPUT AGAIN."
+        color = gets.chomp.strip.downcase
+      end
       @board.push(color)
 
       print "\nPLAYER COLORS SO FAR: ",@board,"\n"
@@ -41,7 +45,7 @@ class Mastermind
     
       if check_all(player_guesses
       )
-        puts "\nVICTORY FOR PLAYER: The pattern was #{@board}!"
+        puts "\nVICTORY FOR PLAYER IN #{i} TURNS: The pattern was #{@board}!"
         break
       end
 
@@ -97,11 +101,9 @@ class Mastermind
       validity = check_guess(guesses)
 
       puts ''
-      # p validity
-  
 
       if check_all(guesses)
-        puts "\nVICTORY FOR COMPUTER: The pattern was #{@board}!"
+        puts "\nVICTORY FOR COMPUTER IN #{i} TURNS: The pattern was #{@board}!"
         break
       end
     end
@@ -138,6 +140,11 @@ class Mastermind
     for i in 0..3
       puts "\nWhat is your guess for position #{i+1}?"
       guess = gets.chomp.strip.downcase
+      while !['black', 'white', 'red', 'green', 'yellow', 'blue'].include?(guess) do
+        puts "\nINVALID GUESS FOR POSITION #{i+1}. PLEASE INPUT AGAIN."
+        guess = gets.chomp.strip.downcase
+      end
+
       @player_guesses.push(guess)
 
       print "\nPLAYER GUESSES SO FAR: ",@player_guesses,"\n"
@@ -155,11 +162,11 @@ game = Mastermind.new
 game.generate_board
 
 if game.player_role == 'm'
-  puts "The computer will guess."
+  puts "\nThe computer will guess."
   game.make_computer_guesses
 
 elsif game.player_role == 'g'
-  puts "You will guess."
+  puts "\nYou will guess."
   game.make_player_guesses
   
 end

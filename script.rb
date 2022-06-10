@@ -7,10 +7,10 @@ class Mastermind
     end
     p "COMPUTER BOARD: ",board
     # return @board
-    puts "Would you like to be the Mastermind or the Guesser?"
-    @player_role = gets.chomp.strip.downcase
+    puts "\nWould you like to be the Mastermind or the Guesser?"
+    @player_role = gets.chomp.strip.downcase[0]
 
-    if @player_role == "mastermind"
+    if @player_role == "m"
       @board = create_board
     end
   end
@@ -19,7 +19,7 @@ class Mastermind
   attr_reader :board
 
   def create_board
-    puts "The available colors are red, blue, green, yellow, white, and black."
+    puts "\nThe available colors are red, blue, green, yellow, white, and black."
     @board = []
     for i in 0..3
       puts "\nWhat is your color for position #{i+1}?"
@@ -52,29 +52,73 @@ class Mastermind
   end
 
   def make_computer_guesses
+    past_guesses = {"first" => [],"second" => [],
+                              "third" => [],"fourth" => []}
+    
+    validity = []
     for i in 1..12
-      puts "\nTURN #{i}:\n"
-      guesses = 4.times.map{['black', 'white', 'red', 'green', 'yellow', 'blue'].sample}
-      p guesses
+      guesses = []
       
-      check_guess(guesses)
+      puts "\nTURN #{i}:\n"
+      if i == 1
+        guesses = 4.times.map{['black', 'white', 'red', 'green', 'yellow', 'blue'].sample}        
+      else
+        for j in 0..3
+          if j == 0
+            hash_index = 'first'
+          elsif j == 1
+            hash_index = 'second'
+          elsif j == 2
+            hash_index = 'third'
+          elsif j == 3
+            hash_index = 'fourth'
+          end
+
+          if validity[j] == 'correct'
+            guesses.push(past_guesses[hash_index][-1])
+          else
+            guesses.push(['black', 'white', 'red', 'green', 'yellow', 'blue'].sample)
+          end
+
+        end
+
+      end
+      
+      past_guesses["first"].push(guesses[0])
+      past_guesses["second"].push(guesses[1])
+      past_guesses["third"].push(guesses[2])
+      past_guesses["fourth"].push(guesses[3])
+      p past_guesses
+      
+      validity = check_guess(guesses)
+
+      puts ''
+      # p validity
+  
 
       if check_all(guesses)
-        puts "\nVICTORY FOR PLAYER: The pattern was #{@board}!"
+        puts "\nVICTORY FOR COMPUTER: The pattern was #{@board}!"
         break
       end
     end
   end
 
   def check_guess(guesses)
-    response = []
+    responses = []
     guesses.each_with_index do |guess, i|
       if guess == @board[i]
         puts "Position #{i+1}: CORRECT"
+        responses.push("correct")
+      elsif @board.include?(guess)
+        puts "Position #{i+1}: WRONG POSITION"
+        responses.push("wrong_position")
       else
         puts "Position #{i+1}: INCORRECT"
+        responses.push("incorrect")
       end
     end
+    
+    return responses
   end
 
   def check_all(guesses)
@@ -106,11 +150,11 @@ game = Mastermind.new
 
 game.generate_board
 
-if game.player_role == 'mastermind'
+if game.player_role == 'm'
   puts "The computer will guess."
   game.make_computer_guesses
 
-elsif game.player_role == 'guesser'
+elsif game.player_role == 'g'
   puts "You will guess."
   game.make_player_guesses
   

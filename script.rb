@@ -3,14 +3,60 @@ class Mastermind
   def generate_board
     @board = []
     for i in 0..3
-      choice = ['black', 'white', 'red', 'green', 'yellow', 'blue'].sample
-      @board.push(choice)
+      @board.push(['black', 'white', 'red', 'green', 'yellow', 'blue'].sample)
     end
-    # p board
+    p "COMPUTER BOARD: ",board
+    # return @board
+    puts "Would you like to be the Mastermind or the Guesser?"
+    @player_role = gets.chomp.strip.downcase
+
+    if @player_role == "mastermind"
+      @board = create_board
+    end
+  end
+
+  attr_reader :player_role
+  attr_reader :board
+
+  def create_board
+    puts "The available colors are red, blue, green, yellow, white, and black."
+    @board = []
+    for i in 0..3
+      puts "\nWhat is your color for position #{i+1}?"
+      color = gets.chomp.strip.downcase
+      @board.push(color)
+
+      print "\nPLAYER COLORS SO FAR: ",@board,"\n"
+    end
     return @board
   end
 
-  attr_reader :board
+  def make_player_guesses
+    for i in 1..12
+      puts "\nTURN #{i}:\n"
+    
+      player_guesses = get_guess
+    
+      check_guess(player_guesses)
+    
+      if check_all(player_guesses
+      )
+        puts "\nVICTORY FOR PLAYER: The pattern was #{@board}!"
+        break
+      end
+
+      if i == 12
+        puts "\nGAME OVER! The pattern was #{@board}!"
+      end
+    end
+  end
+
+  def make_computer_guesses
+    for i in 1..12
+      puts "\nTURN #{i}:\n"
+    
+    end
+  end
 
   def check_guess(guesses)
     response = []
@@ -23,11 +69,19 @@ class Mastermind
     end
   end
 
+  def check_all(guesses)
+    if guesses == @board
+      return true
+    else
+      return false
+    end
+  end
+
   def get_guess
     @player_guesses = []
     for i in 0..3
       puts "\nWhat is your guess for position #{i+1}?"
-      guess = gets.chomp
+      guess = gets.chomp.strip.downcase
       @player_guesses.push(guess)
 
       print "\nPLAYER GUESSES SO FAR: ",@player_guesses,"\n"
@@ -44,10 +98,26 @@ game = Mastermind.new
 
 game.generate_board
 
-for i in 1..12
-  puts "\nTURN #{i}:\n"
+if game.player_role == 'mastermind'
+  puts "The computer will guess."
+  game.make_computer_guesses
 
-  player_guesses = game.get_guess
-
-  game.check_guess(player_guesses)
+elsif game.player_role == 'guesser'
+  puts "You will guess."
+  game.make_player_guesses
+  
 end
+
+# for i in 1..12
+#   puts "\nTURN #{i}:\n"
+
+#   player_guesses = game.get_guess
+
+#   game.check_guess(player_guesses)
+
+#   if game.check_all(player_guesses
+#   )
+#     puts "\nVICTORY FOR PLAYER: The pattern was #{game.board}!"
+#     break
+#   end
+# end

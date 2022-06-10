@@ -54,7 +54,15 @@ class Mastermind
   def make_computer_guesses
     for i in 1..12
       puts "\nTURN #{i}:\n"
-    
+      guesses = 4.times.map{['black', 'white', 'red', 'green', 'yellow', 'blue'].sample}
+      p guesses
+      
+      check_guess(guesses)
+
+      if check_all(guesses)
+        puts "\nVICTORY FOR PLAYER: The pattern was #{@board}!"
+        break
+      end
     end
   end
 
@@ -107,17 +115,3 @@ elsif game.player_role == 'guesser'
   game.make_player_guesses
   
 end
-
-# for i in 1..12
-#   puts "\nTURN #{i}:\n"
-
-#   player_guesses = game.get_guess
-
-#   game.check_guess(player_guesses)
-
-#   if game.check_all(player_guesses
-#   )
-#     puts "\nVICTORY FOR PLAYER: The pattern was #{game.board}!"
-#     break
-#   end
-# end
